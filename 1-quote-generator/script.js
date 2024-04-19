@@ -7,29 +7,23 @@ const loader = document.getElementById('loader');
 
 let apiQuotes=[];
 
-//Show Loading
-function loading(){
+function showLoadingSpinner(){
     loader.hidden=false;
     quoteContainer.hidden=true;
 }
 
-//Hide Loading
-function complete(){
+function removeLoadingSpinner(){
     loader.hidden=true;
     quoteContainer.hidden=false;
 }
 
 //Show New Quote
 function newQuote(){
-    loading()
+    showLoadingSpinner()
     // Pick a random quote from apiQuotes array
     const newQuote = apiQuotes[Math.floor(Math.random()*apiQuotes.length)]
     // Check if Author field is blank and replace if with 'Unknown'
-    if(!newQuote.author){
-        newQuote.author = 'Unknown'
-    }else{
-        authorText.textContent = newQuote.author;
-    }
+    authorText.textContent = newQuote.author || 'Unknown';
     // Check Quote length to determine styling
     if(newQuote.text.length>120){
         quoteText.classList.add('long-quote');
@@ -37,7 +31,7 @@ function newQuote(){
         quoteText.classList.remove('long-quote');
     }
     quoteText.textContent = newQuote.text;
-    complete()
+    removeLoadingSpinner()
 }
 
 function tweetQuote(){
@@ -57,6 +51,7 @@ async function getQuotes() {
         apiQuotes = await response.json();
         newQuote();
     }catch (error){
+        console.log(error)
     }
 }
 
